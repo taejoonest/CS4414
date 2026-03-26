@@ -1,0 +1,16 @@
+Loading embeddings from preprocessed_documents.json...
+Loaded 10000 documents
+Embedding dimension: 768
+Building FAISS IndexFlatL2 index...
+Index built with 10000 vectors
+Index is trained: true
+MODEL:TinyLlama,K=10
+Q:What is machine learning?
+R: Machine learning is the use of algorithms and statistical models to imitate the way that the human brain learns and makes decisions. It is a branc...
+T:1365.75
+Q:How does backpropagation work?
+R: Backpropagation is a mathematical algorithm used in artificial intelligence and machine learning to learn from data. It is a form of artificial ne...
+T:1292
+Q:What is a neural network?
+R: A neural network is a mathematical model that mimics the way the human brain processes information. It consists of a network of interconnected neu...
+T:1414.63

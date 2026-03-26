@@ -1,0 +1,7 @@
+[
+  {
+    "id": 0,
+    "text": "Test query",
+    "embedding": [2.0, 3.0]
+  }
+]

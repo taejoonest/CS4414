@@ -1,0 +1,27 @@
+[
+  {
+    "id": 1,
+    "text": "Sample document 1",
+    "embedding": [1.0, 2.0]
+  },
+  {
+    "id": 2,
+    "text": "Sample document 2", 
+    "embedding": [3.0, 4.0]
+  },
+  {
+    "id": 3,
+    "text": "Sample document 3",
+    "embedding": [5.0, 6.0]
+  },
+  {
+    "id": 4,
+    "text": "Sample document 4",
+    "embedding": [7.0, 8.0]
+  },
+  {
+    "id": 5,
+    "text": "Sample document 5",
+    "embedding": [9.0, 10.0]
+  }
+]

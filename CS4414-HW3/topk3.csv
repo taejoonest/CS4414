@@ -1,0 +1,11 @@
+query,encoding_ms,search_ms,augmentation_ms,generation_ms,total_ms
+"does human hair stop squirrels",90.703,68.4435,0.031333,8512.15,8671.33
+"what are the benefits of fossil fuels",23.577,1.42358,0.049541,1115.7,1140.75
+"what is a apothem",14.8123,5.80033,0.162833,8442.05,8462.83
+"average cost for custom canopy",33.0263,1.07258,0.057959,8811.66,8845.84
+"what is a hardware in a computer",26.9257,35.5256,0.133459,8695.41,8758.01
+"edi logistics definition",28.1636,11.6118,0.097625,2284.05,2323.92
+"why should recreational marijuana be illegal",23.3326,0.818709,0.064709,7666.56,7690.78
+"what class are spiders in",31.7772,20.8505,0.13925,7703.11,7755.89
+"where is the amur leopard found",30.246,13.4713,0.082542,7356.92,7400.72
+"how much does it cost to spayed my female rabbit",31.6403,12.4364,0.078792,8000.75,8044.92

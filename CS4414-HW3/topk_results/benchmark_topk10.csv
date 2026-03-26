@@ -1,0 +1,6 @@
+query,encoding_ms,search_ms,augmentation_ms,generation_ms,total_ms
+"does human hair stop squirrels",48.1064,37.5161,0.053083,10111,10196.7
+"what are the benefits of fossil fuels",39.8523,22.2066,0.248,10312,10374.3
+"what is a apothem",28.6762,19.357,0.348833,9480.53,9528.91
+"average cost for custom canopy",20.3687,5.114,0.35425,10449.6,10475.5
+"what is a hardware in a computer",32.5392,7.02292,0.234667,9925.87,9965.68

@@ -1,0 +1,3 @@
+index_type,avg_search_ms,min_search_ms,max_search_ms,std_dev_ms,queries_per_second
+Flat,1.86627,0.613792,34.8769,6.1306,535.828
+IVFFlat,0.170022,0.087875,0.537041,0.0919272,5881.58

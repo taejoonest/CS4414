@@ -1,0 +1,34 @@
+WHAT GETS COMPILED
+
+When you run "make all", it builds 3 executables:
+
+1. main - The interactive RAG system (THIS IS WHAT YOU NEED)
+   - Compiled from: main.o + vector_db.o + encode.o + llm_generation.o
+   - Links all components together
+   - This is the one you run: ./main
+
+2. encode - Standalone query encoder tool (OPTIONAL)
+   - Can encode queries independently
+   - Not needed if you just want to run the RAG system
+
+3. vector_db - Standalone vector search tool (OPTIONAL)
+   - Can search documents independently
+   - Not needed if you just want to run the RAG system
+
+FOR ASSIGNMENT SUBMISSION:
+You only need to run: ./main
+
+The other two executables (encode and vector_db) are optional utilities.
+
+IF YOU ONLY WANT TO COMPILE MAIN:
+make main
+
+This will compile only what's needed for the interactive system.
+
+WHAT OBJECT FILES ARE NEEDED FOR MAIN:
+- main.o (from main.cpp)
+- vector_db.o (from vector_db.cpp) - library version
+- encode.o (from encode.cpp) - library version  
+- llm_generation.o (from llm_generation.cpp)
+
+All of these get automatically compiled when you run "make main"

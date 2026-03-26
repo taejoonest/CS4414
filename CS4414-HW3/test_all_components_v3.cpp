@@ -1,0 +1,121 @@
+#include <chrono>
+#include <fstream>
+#include <iomanip>
+#include <iostream>
+#include <sstream>
+#include <string>
+#include <vector>
+
+#include "llama.h"
+#include "vector_db.h"
+#include "encode.h"
+#include "llm_generation.h"
+
+static void custom_log_callback(enum ggml_log_level level, const char* text, void* user_data) {
+    (void)user_data; (void)level; (void)text;
+}
+
+std::vector<std::string> load_queries(const std::string& file, int n) {
+    std::ifstream ifs(file);
+    std::string content((std::istreambuf_iterator<char>(ifs)), std::istreambuf_iterator<char>());
+    std::vector<std::string> queries;
+    size_t pos = 0;
+    while ((pos = content.find("\"text\":", pos)) != std::string::npos && (int)queries.size() < n) {
+        pos += 7; while (pos < content.size() && content[pos] != '"') pos++; pos++;
+        size_t end = pos;
+        while (end < content.size() && content[end] != '"') { if (content[end] == '\\') end++; end++; }
+        queries.push_back(content.substr(pos, end - pos));
+        pos = end + 1;
+    }
+    return queries;
+}
+
+std::string build_prompt(const std::string& query, VectorDB& db, const SearchResult& result) {
+    std::ostringstream oss;
+    oss << "Based on the following documents, answer the question.\n\n";
+    for (size_t i = 0; i < result.indices.size() && i < 3; ++i) {
+        const Document& doc = db.get_document_by_index(result.indices[i]);
+        oss << "Document " << (i+1) << ": " << doc.text.substr(0, 300) << "...\n\n";
+    }
+    oss << "Question: " << query << "\n\nAnswer:";
+    return oss.str();
+}
+
+int main() {
+    llama_backend_init();
+    llama_log_set(custom_log_callback, nullptr);
+    
+    VectorDB db("preprocessed_documents.json");
+    db.load_embeddings();
+    db.build_index();
+    
+    llama_model_params params = llama_model_default_params();
+    params.n_gpu_layers = 99;
+    llama_model* emb_model = llama_model_load_from_file("bge-base-en-v1.5-f32.gguf", params);
+    llama_context_params emb_ctx_params = llama_context_default_params();
+    emb_ctx_params.embeddings = true;
+    emb_ctx_params.n_ctx = 512;
+    llama_context* emb_ctx = llama_init_from_model(emb_model, emb_ctx_params);
+    
+    llama_model* llm_model = llama_model_load_from_file("qwen2-1_5b-instruct-q4_0.gguf", params);
+    llama_context_params llm_ctx_params = llama_context_default_params();
+    llm_ctx_params.n_ctx = 2048;
+    llm_ctx_params.n_batch = 512;
+    llama_context* llm_ctx = llama_init_from_model(llm_model, llm_ctx_params);
+    
+    // Load 21 queries from queries.json
+    std::vector<std::string> all_queries = load_queries("queries.json", 21);
+    
+    // FULL warm-up with query 0 (including LLM generation)
+    std::cout << "Warming up with query 0 (full pipeline)..." << std::endl;
+    {
+        auto emb = encode_query(emb_ctx, emb_model, all_queries[0]);
+        normalize_embedding(emb);
+        SearchResult res = db.search(emb, 3);
+        std::string prompt = build_prompt(all_queries[0], db, res);
+        generate_response(llm_ctx, llm_model, prompt, 50);  // Also warm up LLM
+    }
+    std::cout << "Warm-up complete.\n" << std::endl;
+    
+    std::ofstream csv("all_components.csv");
+    csv << "query_idx,encoding_ms,search_ms,generation_ms\n";
+    
+    using clock = std::chrono::high_resolution_clock;
+    
+    std::cout << "Running queries 1-20 from queries.json (skipping cold start):\n";
+    std::cout << "Index | Encoding | Search  | Generation\n";
+    std::cout << std::string(50, '-') << "\n";
+    
+    for (int i = 1; i <= 20; ++i) {
+        auto t1 = clock::now();
+        std::vector<float> emb = encode_query(emb_ctx, emb_model, all_queries[i]);
+        normalize_embedding(emb);
+        auto t2 = clock::now();
+        SearchResult res = db.search(emb, 3);
+        auto t3 = clock::now();
+        std::string prompt = build_prompt(all_queries[i], db, res);
+        std::string response = generate_response(llm_ctx, llm_model, prompt, 100);
+        auto t4 = clock::now();
+        
+        double enc_ms = std::chrono::duration<double, std::milli>(t2 - t1).count();
+        double search_ms = std::chrono::duration<double, std::milli>(t3 - t2).count();
+        double gen_ms = std::chrono::duration<double, std::milli>(t4 - t3).count();
+        
+        std::cout << std::setw(5) << i << " | " 
+                  << std::setw(8) << std::fixed << std::setprecision(1) << enc_ms << " | "
+                  << std::setw(7) << search_ms << " | "
+                  << std::setw(10) << gen_ms << "\n";
+        
+        csv << i << "," << enc_ms << "," << search_ms << "," << gen_ms << "\n";
+    }
+    
+    csv.close();
+    llama_free(emb_ctx);
+    llama_free(llm_ctx);
+    llama_model_free(emb_model);
+    llama_model_free(llm_model);
+    llama_backend_free();
+    
+    std::cout << "\nSaved to all_components.csv\n";
+    return 0;
+}

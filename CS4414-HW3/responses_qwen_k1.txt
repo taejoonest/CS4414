@@ -1,0 +1,16 @@
+Loading embeddings from preprocessed_documents.json...
+Loaded 10000 documents
+Embedding dimension: 768
+Building FAISS IndexFlatL2 index...
+Index built with 10000 vectors
+Index is trained: true
+MODEL:Qwen2,K=1
+Q:What is machine learning?
+R: Machine learning is a subset of artificial intelligence that involves training a computer to learn from data. It is a type of machine learning tha...
+T:1443.03
+Q:How does backpropagation work?
+R: Backpropagation is a method for training neural networks. It is a method for training neural networks. It is a method for training neural networks...
+T:1361.27
+Q:What is a neural network?
+R: A neural network is a network of neurons (or neural network) through which information flows from one neuron to another. The image below represent...
+T:1356.12

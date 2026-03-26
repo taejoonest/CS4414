@@ -1,0 +1,32 @@
+# Build
+build/
+cmake-build-*/
+*.o
+*.a
+*.dylib
+*.so
+
+# Vendored third-party (clone locally; do not push full trees)
+faiss/
+llama.cpp/
+
+# Large / generated data (do not commit)
+**/preprocessed_documents.json
+*.gguf
+*.bin
+
+# IDE
+.idea/
+*.swp
+
+# macOS
+.DS_Store
+
+# Python
+__pycache__/
+*.pyc
+.matplotlib_cache/
+
+# Logs / temp
+*.log
+tmp/
