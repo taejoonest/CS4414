@@ -1,32 +1,76 @@
-# Build
+# =============================================================================
+# CS4414 — root .gitignore
+# =============================================================================
+
+# --- Build / CMake ---
 build/
 cmake-build-*/
+CMakeCache.txt
+CMakeFiles/
+compile_commands.json
+*.ninja
+.ninja_*
+
+# --- Compiled artifacts ---
 *.o
+*.obj
 *.a
+*.lib
 *.dylib
 *.so
+*.dll
+*.exe
 
-# Vendored third-party (clone locally; do not push full trees)
+# --- Vendored clones (download locally; keep repo small) ---
 faiss/
 llama.cpp/
 
-# Large / generated data (do not commit)
-**/preprocessed_documents.json
+# --- Large / generated ML & data (do not commit) ---
 *.gguf
+*.ggml
 *.bin
+*.safetensors
+**/preprocessed_documents.json
+query_embedding.json
 
-# IDE
-.idea/
-*.swp
-
-# macOS
-.DS_Store
-
-# Python
+# --- Python ---
 __pycache__/
-*.pyc
+*.py[cod]
+*$py.class
+.Python
+.venv/
+venv/
+env/
+.env
+.env.*
+*.egg-info/
+.eggs/
+dist/
+*.egg
 .matplotlib_cache/
+.ipynb_checkpoints/
 
-# Logs / temp
+# --- Logs & temp ---
 *.log
 tmp/
+temp/
+*.tmp
+*.bak
+*~
+
+# --- IDE / editors ---
+.idea/
+*.swp
+*.swo
+.project
+.classpath
+.settings/
+
+# --- macOS ---
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# --- Optional: uncomment if you do not want VS Code settings in git ---
+# .vscode/
